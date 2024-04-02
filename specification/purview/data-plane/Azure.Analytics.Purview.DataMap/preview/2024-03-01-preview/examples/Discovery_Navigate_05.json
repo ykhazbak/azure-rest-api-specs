@@ -11,8 +11,7 @@
           "subscriptionId": "12345678-1234-5678-1234-86b7251e0353"
         }
       },
-      "properties": {
-      }
+      "properties": {}
     },
     "api-version": "2024-03-01-preview",
     "maxpagesize": 100,
@@ -29,12 +28,12 @@
             "isLeafNode": false,
             "isEntity": false,
             "itemPath": {
-                "path": "schemas",
-                "extendedProperties": {
-                  "resourceGroup": "test-rg",
-                  "serverEndpoint": "testsqlserver01.database.windows.net",
-                  "subscriptionId": "12345678-1234-5678-1234-86b7251e0353"
-                }
+              "path": "schemas",
+              "extendedProperties": {
+                "resourceGroup": "test-rg",
+                "serverEndpoint": "testsqlserver01.database.windows.net",
+                "subscriptionId": "12345678-1234-5678-1234-86b7251e0353"
+              }
             }
           }
         ]
