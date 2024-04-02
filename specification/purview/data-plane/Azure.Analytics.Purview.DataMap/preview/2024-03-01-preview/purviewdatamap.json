@@ -3120,8 +3120,14 @@
           },
           "default": {
             "description": "Error response describing why the operation failed.",
+            "headers": {
+              "x-ms-error-code": {
+                "type": "string",
+                "description": "Error code for specific error that occurred."
+              }
+            },
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "#/definitions/Error"
             }
           }
         }
@@ -7044,6 +7050,30 @@
       "type": "string",
       "title": "lastModifiedTS",
       "description": "ETag for concurrency control."
+    },
+    "Error": {
+      "description": "The error model definition.",
+      "type": "object",
+      "properties": {
+        "error": {
+          "description": "Error details for current request.",
+          "$ref": "#/definitions/ErrorDetails"
+        }
+      }
+    },
+    "ErrorDetails": {
+      "description": "The error details definition.",
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "description": "Error code."
+        },
+        "message": {
+          "type": "string",
+          "description": "Error message details."
+        }
+      }
     },
     "ErrorResponse": {
       "description": "An error response from the service",

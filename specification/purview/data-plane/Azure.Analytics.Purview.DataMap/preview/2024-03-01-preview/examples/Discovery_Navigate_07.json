@@ -35,6 +35,36 @@
                 "subscriptionId": "12345678-1234-5678-1234-86b7251e0353"
               }
             }
+          },
+          {
+            "properties": {},
+            "name": "views",
+            "type": "views",
+            "isLeafNode": false,
+            "isEntity": false,
+            "itemPath": {
+              "path": "views",
+              "extendedProperties": {
+                "resourceGroup": "test-rg",
+                "serverEndpoint": "testsqlserver01.database.windows.net",
+                "subscriptionId": "12345678-1234-5678-1234-86b7251e0353"
+              }
+            }
+          },
+          {
+            "properties": {},
+            "name": "stored_procedures",
+            "type": "stored_procedures",
+            "isLeafNode": false,
+            "isEntity": false,
+            "itemPath": {
+              "path": "stored_procedures",
+              "extendedProperties": {
+                "resourceGroup": "test-rg",
+                "serverEndpoint": "testsqlserver01.database.windows.net",
+                "subscriptionId": "12345678-1234-5678-1234-86b7251e0353"
+              }
+            }
           }
         ]
       }
