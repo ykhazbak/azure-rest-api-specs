@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "title": "DevCenter",
-    "version": "2024-02-01",
+    "version": "2024-05-01-preview",
     "description": "DevCenter service",
     "x-typespec-generated": [
       {
@@ -78,11 +78,6 @@
                 "description": "String error code indicating what went wrong."
               }
             }
-          }
-        },
-        "x-ms-examples": {
-          "Lists Dev Boxes that the caller has access to in the DevCenter.": {
-            "$ref": "./examples/DevBoxes_ListAllDevBoxes.json"
           }
         },
         "x-ms-pageable": {
@@ -280,6 +275,64 @@
         }
       }
     },
+    "/projects/{projectName}/catalogs/{catalogName}/customizationTasks/{taskName}": {
+      "get": {
+        "operationId": "DevBoxes_GetCustomizationTaskDefinitions",
+        "description": "Gets a customization task.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/Azure.Core.Foundations.ApiVersionParameter"
+          },
+          {
+            "name": "projectName",
+            "in": "path",
+            "description": "Name of the project.",
+            "required": true,
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 63,
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-_.]{2,62}$"
+          },
+          {
+            "name": "catalogName",
+            "in": "path",
+            "description": "Name of the catalog.",
+            "required": true,
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 63,
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-_.]{2,62}$"
+          },
+          {
+            "name": "taskName",
+            "in": "path",
+            "description": "Full name of the task: {catalogName}/{taskName}.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "schema": {
+              "$ref": "#/definitions/CustomizationTaskDefinition"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/Azure.Core.Foundations.ErrorResponse"
+            },
+            "headers": {
+              "x-ms-error-code": {
+                "type": "string",
+                "description": "String error code indicating what went wrong."
+              }
+            }
+          }
+        }
+      }
+    },
     "/projects/{projectName}/catalogs/{catalogName}/environmentDefinitions": {
       "get": {
         "operationId": "Environments_ListEnvironmentDefinitionsByCatalog",
@@ -399,6 +452,100 @@
         }
       }
     },
+    "/projects/{projectName}/customizationTasks": {
+      "get": {
+        "operationId": "DevBoxes_ListCustomizationTaskDefinitionsByProject",
+        "description": "Lists all customization tasks available to the project.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/Azure.Core.Foundations.ApiVersionParameter"
+          },
+          {
+            "name": "projectName",
+            "in": "path",
+            "description": "The DevCenter Project upon which to execute operations.",
+            "required": true,
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 63,
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-_.]{2,62}$"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "schema": {
+              "$ref": "#/definitions/PagedCustomizationTaskDefinition"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/Azure.Core.Foundations.ErrorResponse"
+            },
+            "headers": {
+              "x-ms-error-code": {
+                "type": "string",
+                "description": "String error code indicating what went wrong."
+              }
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    },
+    "/projects/{projectName}/customizationTasks:validateGroup": {
+      "post": {
+        "operationId": "DevBoxes_ValidateCustomizationTasksAction",
+        "description": "Validates a list of customization tasks.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/Azure.Core.Foundations.ApiVersionParameter"
+          },
+          {
+            "name": "projectName",
+            "in": "path",
+            "description": "The DevCenter Project upon which to execute operations.",
+            "required": true,
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 63,
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-_.]{2,62}$"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Customization tasks to validate.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CustomizationTaskList"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "The request has been accepted for processing, but processing has not yet completed.",
+            "schema": {
+              "$ref": "#/definitions/CustomizationTaskListValidationOperationResult"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/Azure.Core.Foundations.ErrorResponse"
+            },
+            "headers": {
+              "x-ms-error-code": {
+                "type": "string",
+                "description": "String error code indicating what went wrong."
+              }
+            }
+          }
+        }
+      }
+    },
     "/projects/{projectName}/environmentDefinitions": {
       "get": {
         "operationId": "Environments_ListEnvironmentDefinitionsByProject",
@@ -491,6 +638,123 @@
         },
         "x-ms-pageable": {
           "nextLinkName": "nextLink"
+        }
+      }
+    },
+    "/projects/{projectName}/environmentTypes/{environmentTypeName}": {
+      "get": {
+        "operationId": "Environments_GetEnvironmentTypes",
+        "description": "Get an environment type configured for a project.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/Azure.Core.Foundations.ApiVersionParameter"
+          },
+          {
+            "name": "projectName",
+            "in": "path",
+            "description": "Name of the project.",
+            "required": true,
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 63,
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-_.]{2,62}$"
+          },
+          {
+            "name": "environmentTypeName",
+            "in": "path",
+            "description": "Name of the environment type.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "schema": {
+              "$ref": "#/definitions/EnvironmentType"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/Azure.Core.Foundations.ErrorResponse"
+            },
+            "headers": {
+              "x-ms-error-code": {
+                "type": "string",
+                "description": "String error code indicating what went wrong."
+              }
+            }
+          }
+        }
+      }
+    },
+    "/projects/{projectName}/environmentTypes/{environmentTypeName}/users/{userId}/abilities": {
+      "get": {
+        "operationId": "Environments_GetEnvironmentTypeAbilities",
+        "description": "Gets the signed-in user's permitted abilities in an environment type.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/Azure.Core.Foundations.ApiVersionParameter"
+          },
+          {
+            "name": "projectName",
+            "in": "path",
+            "description": "The DevCenter Project upon which to execute operations.",
+            "required": true,
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 63,
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-]{2,62}$"
+          },
+          {
+            "name": "environmentTypeName",
+            "in": "path",
+            "description": "The name of the environment type",
+            "required": true,
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 63,
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-_.]{2,62}$"
+          },
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "  The AAD object id of the user. If value is 'me', the identity is taken from the\n  authentication context.",
+            "required": true,
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 36,
+            "pattern": "^[a-zA-Z0-9]{8}-([a-zA-Z0-9]{4}-){3}[a-zA-Z0-9]{12}$|^me$"
+          },
+          {
+            "name": "top",
+            "in": "query",
+            "description": "The maximum number of resources to return from the operation. Example: 'top=10'.",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "schema": {
+              "$ref": "#/definitions/EnvironmentTypeAbilities"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/Azure.Core.Foundations.ErrorResponse"
+            },
+            "headers": {
+              "x-ms-error-code": {
+                "type": "string",
+                "description": "String error code indicating what went wrong."
+              }
+            }
+          }
         }
       }
     },
@@ -860,6 +1124,57 @@
         },
         "x-ms-pageable": {
           "nextLinkName": "nextLink"
+        }
+      }
+    },
+    "/projects/{projectName}/users/{userId}/abilities": {
+      "get": {
+        "operationId": "DevCenter_GetProjectAbilities",
+        "description": "Gets the signed-in user's permitted abilities in a project.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/Azure.Core.Foundations.ApiVersionParameter"
+          },
+          {
+            "name": "projectName",
+            "in": "path",
+            "description": "The DevCenter Project upon which to execute operations.",
+            "required": true,
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 63,
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-]{2,62}$"
+          },
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "  The AAD object id of the user. If value is 'me', the identity is taken from the\n  authentication context.",
+            "required": true,
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 36,
+            "pattern": "^[a-zA-Z0-9]{8}-([a-zA-Z0-9]{4}-){3}[a-zA-Z0-9]{12}$|^me$"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "schema": {
+              "$ref": "#/definitions/ProjectAbilities"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/Azure.Core.Foundations.ErrorResponse"
+            },
+            "headers": {
+              "x-ms-error-code": {
+                "type": "string",
+                "description": "String error code indicating what went wrong."
+              }
+            }
+          }
         }
       }
     },
@@ -1811,6 +2126,330 @@
         },
         "x-ms-pageable": {
           "nextLinkName": "nextLink"
+        }
+      }
+    },
+    "/projects/{projectName}/users/{userId}/devboxes/{devBoxName}/customizationGroups": {
+      "get": {
+        "operationId": "DevBoxes_ListCustomizationGroups",
+        "description": "  Lists customization groups on the Dev Box. Listed customization groups exclude \n  task information unless specified via the include parameter.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/Azure.Core.Foundations.ApiVersionParameter"
+          },
+          {
+            "name": "projectName",
+            "in": "path",
+            "description": "The DevCenter Project upon which to execute operations.",
+            "required": true,
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 63,
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-_.]{2,62}$"
+          },
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "  The AAD object id of the user. If value is 'me', the identity is taken from the \n  authentication context.",
+            "required": true,
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 36,
+            "pattern": "^[a-zA-Z0-9]{8}-([a-zA-Z0-9]{4}-){3}[a-zA-Z0-9]{12}$|^me$"
+          },
+          {
+            "name": "devBoxName",
+            "in": "path",
+            "description": "The name of a Dev Box.",
+            "required": true,
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 63,
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-_.]{2,62}$"
+          },
+          {
+            "name": "include",
+            "in": "query",
+            "description": "Optional query parameter to specify what properties should be included in the response.",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "tasks"
+            ],
+            "x-ms-enum": {
+              "name": "ListCustomizationGroupsIncludeProperty",
+              "modelAsString": true,
+              "values": [
+                {
+                  "name": "tasks",
+                  "value": "tasks"
+                }
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "schema": {
+              "$ref": "#/definitions/PagedCustomizationGroup"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/Azure.Core.Foundations.ErrorResponse"
+            },
+            "headers": {
+              "x-ms-error-code": {
+                "type": "string",
+                "description": "String error code indicating what went wrong."
+              }
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    },
+    "/projects/{projectName}/users/{userId}/devboxes/{devBoxName}/customizationGroups/{customizationGroupName}": {
+      "get": {
+        "operationId": "DevBoxes_GetCustomizationGroup",
+        "description": "  Gets a customization group.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/Azure.Core.Foundations.ApiVersionParameter"
+          },
+          {
+            "name": "projectName",
+            "in": "path",
+            "description": "Name of the project.",
+            "required": true,
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 63,
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-_.]{2,62}$"
+          },
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "The AAD object id of the user. If value is 'me', the identity is taken from the authentication context.",
+            "required": true,
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 36,
+            "pattern": "^[a-zA-Z0-9]{8}-([a-zA-Z0-9]{4}-){3}[a-zA-Z0-9]{12}$|^me$"
+          },
+          {
+            "name": "devBoxName",
+            "in": "path",
+            "description": "Display name for the Dev Box.",
+            "required": true,
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 63,
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-_.]{2,62}$"
+          },
+          {
+            "name": "customizationGroupName",
+            "in": "path",
+            "description": "Name of the customization group.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "schema": {
+              "$ref": "#/definitions/CustomizationGroup"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/Azure.Core.Foundations.ErrorResponse"
+            },
+            "headers": {
+              "x-ms-error-code": {
+                "type": "string",
+                "description": "String error code indicating what went wrong."
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "operationId": "DevBoxes_CreateCustomizationGroup",
+        "description": "Applies customizations to the Dev Box.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/Azure.Core.Foundations.ApiVersionParameter"
+          },
+          {
+            "name": "projectName",
+            "in": "path",
+            "description": "The DevCenter Project upon which to execute operations.",
+            "required": true,
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 63,
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-_.]{2,62}$"
+          },
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "  The AAD object id of the user. If value is 'me', the identity is taken from the \n  authentication context.",
+            "required": true,
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 36,
+            "pattern": "^[a-zA-Z0-9]{8}-([a-zA-Z0-9]{4}-){3}[a-zA-Z0-9]{12}$|^me$"
+          },
+          {
+            "name": "devBoxName",
+            "in": "path",
+            "description": "The name of a Dev Box.",
+            "required": true,
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 63,
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-_.]{2,62}$"
+          },
+          {
+            "name": "customizationGroupName",
+            "in": "path",
+            "description": "A customization group name.",
+            "required": true,
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 63,
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-_.]{2,62}$"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Represents the body request of a Dev Box creation. Dev Box Pool name is required. Optionally set the owner of the Dev Box as local administrator",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CustomizationGroup"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "schema": {
+              "$ref": "#/definitions/CustomizationGroup"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/Azure.Core.Foundations.ErrorResponse"
+            },
+            "headers": {
+              "x-ms-error-code": {
+                "type": "string",
+                "description": "String error code indicating what went wrong."
+              }
+            }
+          }
+        }
+      }
+    },
+    "/projects/{projectName}/users/{userId}/devboxes/{devBoxName}/customizationGroups/{customizationGroupName}/logs/{customizationTaskId}": {
+      "get": {
+        "operationId": "DevBoxes_GetCustomizationTaskLog",
+        "description": "Gets the log for a customization task.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/Azure.Core.Foundations.ApiVersionParameter"
+          },
+          {
+            "name": "projectName",
+            "in": "path",
+            "description": "The DevCenter Project upon which to execute operations.",
+            "required": true,
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 63,
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-_.]{2,62}$"
+          },
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "  The AAD object id of the user. If value is 'me', the identity is taken from the \n  authentication context.",
+            "required": true,
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 36,
+            "pattern": "^[a-zA-Z0-9]{8}-([a-zA-Z0-9]{4}-){3}[a-zA-Z0-9]{12}$|^me$"
+          },
+          {
+            "name": "devBoxName",
+            "in": "path",
+            "description": "The name of a Dev Box.",
+            "required": true,
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 63,
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-_.]{2,62}$"
+          },
+          {
+            "name": "customizationGroupName",
+            "in": "path",
+            "description": "A customization group name.",
+            "required": true,
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 63,
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-_.]{2,62}$"
+          },
+          {
+            "name": "customizationTaskId",
+            "in": "path",
+            "description": "A customization task ID.",
+            "required": true,
+            "type": "string",
+            "minLength": 36,
+            "maxLength": 36,
+            "pattern": "^[a-zA-Z0-9]{8}-([a-zA-Z0-9]{4}-){3}[a-zA-Z0-9]{12}$"
+          },
+          {
+            "name": "accept",
+            "in": "header",
+            "description": "Accept header.",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "text/plain"
+            ],
+            "x-ms-enum": {
+              "modelAsString": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/Azure.Core.Foundations.ErrorResponse"
+            },
+            "headers": {
+              "x-ms-error-code": {
+                "type": "string",
+                "description": "String error code indicating what went wrong."
+              }
+            }
+          }
         }
       }
     },
@@ -2955,11 +3594,6 @@
             }
           }
         },
-        "x-ms-examples": {
-          "Lists Dev Boxes in the project for a particular user.": {
-            "$ref": "./examples/DevBoxes_ListAllDevBoxesByUser.json"
-          }
-        },
         "x-ms-pageable": {
           "nextLinkName": "nextLink"
         }
@@ -3059,6 +3693,490 @@
         "uri",
         "name"
       ]
+    },
+    "CustomizationGroup": {
+      "type": "object",
+      "description": "Represents a list of tasks to apply to a Dev Box.",
+      "properties": {
+        "tasks": {
+          "type": "array",
+          "description": "Tasks to apply. Note by default tasks are excluded from the response when\nlisting customization groups. To include them, use the `include=tasks` query\nparameter.",
+          "items": {
+            "$ref": "#/definitions/CustomizationTask"
+          }
+        },
+        "uri": {
+          "type": "string",
+          "description": "The unique URI of the customization group.",
+          "readOnly": true
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the customization group.",
+          "readOnly": true
+        },
+        "status": {
+          "$ref": "#/definitions/CustomizationGroupStatus",
+          "description": "Status of the customization group.",
+          "readOnly": true
+        },
+        "startTime": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Start time of the customization group.",
+          "readOnly": true
+        },
+        "endTime": {
+          "type": "string",
+          "format": "date-time",
+          "description": "End time of the customization group.",
+          "readOnly": true
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "CustomizationGroupStatus": {
+      "type": "string",
+      "description": "Status of a customization group.",
+      "enum": [
+        "NotStarted",
+        "Running",
+        "Succeeded",
+        "Failed",
+        "ValidationFailed"
+      ],
+      "x-ms-enum": {
+        "name": "CustomizationGroupStatus",
+        "modelAsString": true,
+        "values": [
+          {
+            "name": "NotStarted",
+            "value": "NotStarted",
+            "description": "The customization group has not yet started."
+          },
+          {
+            "name": "Running",
+            "value": "Running",
+            "description": "The customization group is currently executing."
+          },
+          {
+            "name": "Succeeded",
+            "value": "Succeeded",
+            "description": "All tasks in the customization group successfully executed."
+          },
+          {
+            "name": "Failed",
+            "value": "Failed",
+            "description": "At least one task in the customization group failed."
+          },
+          {
+            "name": "ValidationFailed",
+            "value": "ValidationFailed",
+            "description": "At least one task in the customization group failed validation."
+          }
+        ]
+      }
+    },
+    "CustomizationTask": {
+      "type": "object",
+      "description": "A customization task to run on a Dev Box.",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the task.",
+          "readOnly": true
+        },
+        "parameters": {
+          "type": "object",
+          "description": "Parameters for the task.",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "displayName": {
+          "type": "string",
+          "description": "Display name to help differentiate multiple instances of the same task."
+        },
+        "timeout": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Timeout, in seconds. Overrides any timeout provided on the task definition."
+        },
+        "runAs": {
+          "$ref": "#/definitions/CustomizationTaskExecutionAccount",
+          "description": "What account to run the task as."
+        },
+        "id": {
+          "type": "string",
+          "description": "ID of the task instance.",
+          "readOnly": true
+        },
+        "logUri": {
+          "type": "string",
+          "description": "The unique URI for retrieving the task logs.",
+          "readOnly": true
+        },
+        "status": {
+          "$ref": "#/definitions/CustomizationTaskStatus",
+          "description": "Status of the task.",
+          "readOnly": true
+        },
+        "startTime": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Start time of the task.",
+          "readOnly": true
+        },
+        "endTime": {
+          "type": "string",
+          "format": "date-time",
+          "description": "End time of the task.",
+          "readOnly": true
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "CustomizationTaskDefinition": {
+      "type": "object",
+      "description": "Represents a task to be used in customizing a Dev Box.",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Full name of the task: {catalogName}/{taskName}.",
+          "readOnly": true
+        },
+        "catalogName": {
+          "type": "string",
+          "description": "Name of the catalog that the task belongs to."
+        },
+        "uri": {
+          "type": "string",
+          "description": "The unique URI of the customization task.",
+          "readOnly": true
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the task."
+        },
+        "parameters": {
+          "type": "object",
+          "description": "Parameters for the task.",
+          "additionalProperties": {
+            "$ref": "#/definitions/CustomizationTaskDefinitionParameter"
+          }
+        }
+      },
+      "required": [
+        "name",
+        "catalogName"
+      ]
+    },
+    "CustomizationTaskDefinitionParameter": {
+      "type": "object",
+      "description": "Parameters for a customization task.",
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "Description of the parameter."
+        },
+        "type": {
+          "$ref": "#/definitions/CustomizationTaskDefinitionParameterType",
+          "description": "Type of the parameter."
+        },
+        "required": {
+          "type": "boolean",
+          "description": "Whether or not the parameter is required.",
+          "readOnly": true
+        },
+        "default": {
+          "type": "string",
+          "description": "Default value for the parameter."
+        },
+        "allowed": {
+          "type": "array",
+          "description": "Allowed values for the parameter.",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "type"
+      ]
+    },
+    "CustomizationTaskDefinitionParameterType": {
+      "type": "string",
+      "description": "Type of the parameter.",
+      "enum": [
+        "string",
+        "number",
+        "boolean"
+      ],
+      "x-ms-enum": {
+        "name": "CustomizationTaskDefinitionParameterType",
+        "modelAsString": true,
+        "values": [
+          {
+            "name": "string",
+            "value": "string"
+          },
+          {
+            "name": "number",
+            "value": "number"
+          },
+          {
+            "name": "boolean",
+            "value": "boolean"
+          }
+        ]
+      }
+    },
+    "CustomizationTaskExecutionAccount": {
+      "type": "string",
+      "description": "What account to run the task as.",
+      "enum": [
+        "System",
+        "User"
+      ],
+      "x-ms-enum": {
+        "name": "CustomizationTaskExecutionAccount",
+        "modelAsString": true,
+        "values": [
+          {
+            "name": "System",
+            "value": "System",
+            "description": "The SYSTEM account."
+          },
+          {
+            "name": "User",
+            "value": "User",
+            "description": "The account of the signed in user."
+          }
+        ]
+      }
+    },
+    "CustomizationTaskList": {
+      "type": "object",
+      "description": "Represents a list of tasks to apply to a Dev Box",
+      "properties": {
+        "tasks": {
+          "type": "array",
+          "description": "Tasks to apply.",
+          "items": {
+            "$ref": "#/definitions/CustomizationTask"
+          }
+        }
+      }
+    },
+    "CustomizationTaskListValidationError": {
+      "type": "object",
+      "description": "All of the validation errors for a customization task.",
+      "properties": {
+        "target": {
+          "$ref": "#/definitions/CustomizationTask",
+          "description": "The customization task that the error is about."
+        },
+        "details": {
+          "type": "array",
+          "description": "List of validation errors for the task.",
+          "items": {
+            "$ref": "#/definitions/CustomizationTaskListValidationErrorDetails"
+          },
+          "x-ms-identifiers": []
+        }
+      },
+      "required": [
+        "target",
+        "details"
+      ]
+    },
+    "CustomizationTaskListValidationErrorDetails": {
+      "type": "object",
+      "description": "A single error from validating a task.",
+      "properties": {
+        "code": {
+          "type": "string",
+          "description": "An identifier for the error. Codes are invariant and are intended to be consumed programmatically."
+        },
+        "message": {
+          "type": "string",
+          "description": "A message describing the error, intended to be suitable for display in a user interface."
+        }
+      },
+      "required": [
+        "code",
+        "message"
+      ]
+    },
+    "CustomizationTaskListValidationOperationResult": {
+      "type": "object",
+      "description": "The operation result of validating a list of customization tasks.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Fully qualified ID for the operation status.",
+          "readOnly": true
+        },
+        "name": {
+          "type": "string",
+          "description": "The operation id name."
+        },
+        "status": {
+          "$ref": "#/definitions/OperationStatusValue",
+          "description": "Provisioning state of the resource."
+        },
+        "resourceId": {
+          "type": "string",
+          "description": "The id of the resource."
+        },
+        "startTime": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The start time of the operation."
+        },
+        "endTime": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The end time of the operation."
+        },
+        "percentComplete": {
+          "type": "number",
+          "format": "double",
+          "description": "Percent of the operation that is complete.",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "properties": {
+          "description": "Custom operation properties, populated only for a successful operation."
+        },
+        "error": {
+          "$ref": "#/definitions/Azure.Core.Foundations.Error",
+          "description": "Operation Error message."
+        },
+        "result": {
+          "$ref": "#/definitions/CustomizationTaskListValidationResult",
+          "description": "Outcome of validation."
+        }
+      },
+      "required": [
+        "id",
+        "status"
+      ]
+    },
+    "CustomizationTaskListValidationResult": {
+      "type": "object",
+      "description": "The result of validating a list of customization tasks.",
+      "properties": {
+        "validationResult": {
+          "$ref": "#/definitions/CustomizationTaskListValidationStatus",
+          "description": "Outcome of validation."
+        },
+        "errors": {
+          "type": "array",
+          "description": "List of validation errors. Absent if no errors.",
+          "items": {
+            "$ref": "#/definitions/CustomizationTaskListValidationError"
+          },
+          "x-ms-identifiers": []
+        }
+      },
+      "required": [
+        "validationResult"
+      ]
+    },
+    "CustomizationTaskListValidationStatus": {
+      "type": "string",
+      "description": "Status of validating a list of customization tasks.",
+      "enum": [
+        "Succeeded",
+        "Failed"
+      ],
+      "x-ms-enum": {
+        "name": "CustomizationTaskListValidationStatus",
+        "modelAsString": true,
+        "values": [
+          {
+            "name": "Succeeded",
+            "value": "Succeeded",
+            "description": "Validation succeeded."
+          },
+          {
+            "name": "Failed",
+            "value": "Failed",
+            "description": "Validation failed."
+          }
+        ]
+      }
+    },
+    "CustomizationTaskStatus": {
+      "type": "string",
+      "description": "Status of a customization task.",
+      "enum": [
+        "NotStarted",
+        "Running",
+        "Succeeded",
+        "FailedValidation",
+        "Skipped",
+        "TimedOut",
+        "Failed",
+        "WaitingForUserInputUac",
+        "WaitingForUserSession"
+      ],
+      "x-ms-enum": {
+        "name": "CustomizationTaskStatus",
+        "modelAsString": true,
+        "values": [
+          {
+            "name": "NotStarted",
+            "value": "NotStarted",
+            "description": "The task has not yet started."
+          },
+          {
+            "name": "Running",
+            "value": "Running",
+            "description": "The task is currently executing."
+          },
+          {
+            "name": "Succeeded",
+            "value": "Succeeded",
+            "description": "The task successfully executed."
+          },
+          {
+            "name": "FailedValidation",
+            "value": "FailedValidation",
+            "description": "The task reference is not valid."
+          },
+          {
+            "name": "Skipped",
+            "value": "Skipped",
+            "description": "he task was skipped."
+          },
+          {
+            "name": "TimedOut",
+            "value": "TimedOut",
+            "description": "The task timed out."
+          },
+          {
+            "name": "Failed",
+            "value": "Failed",
+            "description": "The task failed to execute."
+          },
+          {
+            "name": "WaitingForUserInputUac",
+            "value": "WaitingForUserInputUac",
+            "description": "The task is awaiting the UAC prompt to be approved."
+          },
+          {
+            "name": "WaitingForUserSession",
+            "value": "WaitingForUserSession",
+            "description": "The task is awaiting the user to connect to the Dev Box to execute."
+          }
+        ]
+      }
     },
     "DevBox": {
       "type": "object",
@@ -4227,6 +5345,126 @@
         "status"
       ]
     },
+    "EnvironmentTypeAbilities": {
+      "type": "object",
+      "description": "Abilities a user has on an environment type.",
+      "properties": {
+        "abilitiesAsAdmin": {
+          "type": "array",
+          "description": "The abilities the user has to perform actions on the environment type as an admin.",
+          "items": {
+            "$ref": "#/definitions/EnvironmentTypeAbilityAsAdmin"
+          }
+        },
+        "abilitiesAsDeveloper": {
+          "type": "array",
+          "description": "The abilities the user has to perform actions on the environment type as a developer.",
+          "items": {
+            "$ref": "#/definitions/EnvironmentTypeAbilityAsDeveloper"
+          }
+        }
+      },
+      "required": [
+        "abilitiesAsAdmin",
+        "abilitiesAsDeveloper"
+      ]
+    },
+    "EnvironmentTypeAbilityAsAdmin": {
+      "type": "string",
+      "description": "An ability the user has to perform an action on the environment type as an admin.",
+      "enum": [
+        "DeleteEnvironments",
+        "ManageEnvironmentActions",
+        "ReadEnvironmentActions",
+        "ReadEnvironmentOutputs",
+        "ReadEnvironments",
+        "WriteEnvironments"
+      ],
+      "x-ms-enum": {
+        "name": "EnvironmentTypeAbilityAsAdmin",
+        "modelAsString": true,
+        "values": [
+          {
+            "name": "DeleteEnvironments",
+            "value": "DeleteEnvironments",
+            "description": "User can delete environments."
+          },
+          {
+            "name": "ManageEnvironmentActions",
+            "value": "ManageEnvironmentActions",
+            "description": "User can delay and skip actions on environments."
+          },
+          {
+            "name": "ReadEnvironmentActions",
+            "value": "ReadEnvironmentActions",
+            "description": "User can read actions on environments."
+          },
+          {
+            "name": "ReadEnvironmentOutputs",
+            "value": "ReadEnvironmentOutputs",
+            "description": "User can read outputs on environments."
+          },
+          {
+            "name": "ReadEnvironments",
+            "value": "ReadEnvironments",
+            "description": "User can read environments."
+          },
+          {
+            "name": "WriteEnvironments",
+            "value": "WriteEnvironments",
+            "description": "User can create new environments or replace and update existing ones."
+          }
+        ]
+      }
+    },
+    "EnvironmentTypeAbilityAsDeveloper": {
+      "type": "string",
+      "description": "An ability the user has to perform an action on the environment type as a developer.",
+      "enum": [
+        "DeleteEnvironments",
+        "ManageEnvironmentActions",
+        "ReadEnvironmentActions",
+        "ReadEnvironmentOutputs",
+        "ReadEnvironments",
+        "WriteEnvironments"
+      ],
+      "x-ms-enum": {
+        "name": "EnvironmentTypeAbilityAsDeveloper",
+        "modelAsString": true,
+        "values": [
+          {
+            "name": "DeleteEnvironments",
+            "value": "DeleteEnvironments",
+            "description": "User can delete environments."
+          },
+          {
+            "name": "ManageEnvironmentActions",
+            "value": "ManageEnvironmentActions",
+            "description": "User can delay and skip actions on environments."
+          },
+          {
+            "name": "ReadEnvironmentActions",
+            "value": "ReadEnvironmentActions",
+            "description": "User can read actions on environments."
+          },
+          {
+            "name": "ReadEnvironmentOutputs",
+            "value": "ReadEnvironmentOutputs",
+            "description": "User can read outputs on environments."
+          },
+          {
+            "name": "ReadEnvironments",
+            "value": "ReadEnvironments",
+            "description": "User can read environments."
+          },
+          {
+            "name": "WriteEnvironments",
+            "value": "WriteEnvironments",
+            "description": "User can create new environments or replace and update existing ones."
+          }
+        ]
+      }
+    },
     "EnvironmentTypeEnableStatus": {
       "type": "string",
       "description": "Indicates whether an environment type is enabled for use in a project.",
@@ -4502,6 +5740,50 @@
           "description": "The Catalog items on this page",
           "items": {
             "$ref": "#/definitions/Catalog"
+          },
+          "x-ms-identifiers": []
+        },
+        "nextLink": {
+          "type": "string",
+          "format": "uri",
+          "description": "The link to the next page of items"
+        }
+      },
+      "required": [
+        "value"
+      ]
+    },
+    "PagedCustomizationGroup": {
+      "type": "object",
+      "description": "List of customization groups applied to a Dev Box.",
+      "properties": {
+        "value": {
+          "type": "array",
+          "description": "The CustomizationGroup items on this page",
+          "items": {
+            "$ref": "#/definitions/CustomizationGroup"
+          },
+          "x-ms-identifiers": []
+        },
+        "nextLink": {
+          "type": "string",
+          "format": "uri",
+          "description": "The link to the next page of items"
+        }
+      },
+      "required": [
+        "value"
+      ]
+    },
+    "PagedCustomizationTaskDefinition": {
+      "type": "object",
+      "description": "The Customization Task list result.",
+      "properties": {
+        "value": {
+          "type": "array",
+          "description": "The CustomizationTaskDefinition items on this page",
+          "items": {
+            "$ref": "#/definitions/CustomizationTaskDefinition"
           },
           "x-ms-identifiers": []
         },
@@ -5008,6 +6290,210 @@
         "uri",
         "name"
       ]
+    },
+    "ProjectAbilities": {
+      "type": "object",
+      "description": "Abilities a user has on a project.",
+      "properties": {
+        "abilitiesAsAdmin": {
+          "type": "array",
+          "description": "The abilities the user has to perform actions on the project as an admin.",
+          "items": {
+            "$ref": "#/definitions/ProjectAbilityAsAdmin"
+          }
+        },
+        "abilitiesAsDeveloper": {
+          "type": "array",
+          "description": "The abilities the user has to perform actions on the project as a developer.",
+          "items": {
+            "$ref": "#/definitions/ProjectAbilityAsDeveloper"
+          }
+        }
+      },
+      "required": [
+        "abilitiesAsAdmin",
+        "abilitiesAsDeveloper"
+      ]
+    },
+    "ProjectAbilityAsAdmin": {
+      "type": "string",
+      "description": "An ability the user has to perform an action on the project as an admin.",
+      "enum": [
+        "DeleteDevBoxes",
+        "DeleteEnvironments",
+        "ManageEnvironmentActions",
+        "ReadDevBoxes",
+        "ReadEnvironmentActions",
+        "ReadEnvironmentOutputs",
+        "ReadEnvironments",
+        "StartDevBoxes",
+        "StopDevBoxes",
+        "WriteDevBoxes",
+        "WriteEnvironments"
+      ],
+      "x-ms-enum": {
+        "name": "ProjectAbilityAsAdmin",
+        "modelAsString": true,
+        "values": [
+          {
+            "name": "DeleteDevBoxes",
+            "value": "DeleteDevBoxes",
+            "description": "User can delete dev boxes."
+          },
+          {
+            "name": "DeleteEnvironments",
+            "value": "DeleteEnvironments",
+            "description": "User can delete environments."
+          },
+          {
+            "name": "ManageEnvironmentActions",
+            "value": "ManageEnvironmentActions",
+            "description": "User can delay and skip actions on environments."
+          },
+          {
+            "name": "ReadDevBoxes",
+            "value": "ReadDevBoxes",
+            "description": "User can read dev boxes."
+          },
+          {
+            "name": "ReadEnvironmentActions",
+            "value": "ReadEnvironmentActions",
+            "description": "User can read actions on environments."
+          },
+          {
+            "name": "ReadEnvironmentOutputs",
+            "value": "ReadEnvironmentOutputs",
+            "description": "User can read outputs on environments."
+          },
+          {
+            "name": "ReadEnvironments",
+            "value": "ReadEnvironments",
+            "description": "User can read environments."
+          },
+          {
+            "name": "StartDevBoxes",
+            "value": "StartDevBoxes",
+            "description": "User can start dev boxes."
+          },
+          {
+            "name": "StopDevBoxes",
+            "value": "StopDevBoxes",
+            "description": "User can stop dev boxes."
+          },
+          {
+            "name": "WriteDevBoxes",
+            "value": "WriteDevBoxes",
+            "description": "User can create dev boxes."
+          },
+          {
+            "name": "WriteEnvironments",
+            "value": "WriteEnvironments",
+            "description": "User can create new environments or replace and update existing ones."
+          }
+        ]
+      }
+    },
+    "ProjectAbilityAsDeveloper": {
+      "type": "string",
+      "description": "An ability the user has to perform an action on the project as a developer.",
+      "enum": [
+        "CustomizeDevBoxes",
+        "DeleteDevBoxes",
+        "DeleteEnvironments",
+        "ManageDevBoxActions",
+        "ManageEnvironmentActions",
+        "ReadDevBoxActions",
+        "ReadDevBoxes",
+        "ReadEnvironmentActions",
+        "ReadEnvironmentOutputs",
+        "ReadEnvironments",
+        "ReadRemoteConnections",
+        "StartDevBoxes",
+        "StopDevBoxes",
+        "WriteDevBoxes",
+        "WriteEnvironments"
+      ],
+      "x-ms-enum": {
+        "name": "ProjectAbilityAsDeveloper",
+        "modelAsString": true,
+        "values": [
+          {
+            "name": "CustomizeDevBoxes",
+            "value": "CustomizeDevBoxes",
+            "description": "User can customize their own dev boxes."
+          },
+          {
+            "name": "DeleteDevBoxes",
+            "value": "DeleteDevBoxes",
+            "description": "User can delete their own dev boxes."
+          },
+          {
+            "name": "DeleteEnvironments",
+            "value": "DeleteEnvironments",
+            "description": "User can delete environments."
+          },
+          {
+            "name": "ManageDevBoxActions",
+            "value": "ManageDevBoxActions",
+            "description": "User can delay and skip actions on their own dev boxes."
+          },
+          {
+            "name": "ManageEnvironmentActions",
+            "value": "ManageEnvironmentActions",
+            "description": "User can delay and skip actions on environments."
+          },
+          {
+            "name": "ReadDevBoxActions",
+            "value": "ReadDevBoxActions",
+            "description": "User can read actions on their own dev boxes."
+          },
+          {
+            "name": "ReadDevBoxes",
+            "value": "ReadDevBoxes",
+            "description": "User can read their own dev boxes."
+          },
+          {
+            "name": "ReadEnvironmentActions",
+            "value": "ReadEnvironmentActions",
+            "description": "User can read actions on environments."
+          },
+          {
+            "name": "ReadEnvironmentOutputs",
+            "value": "ReadEnvironmentOutputs",
+            "description": "User can read outputs on environments."
+          },
+          {
+            "name": "ReadEnvironments",
+            "value": "ReadEnvironments",
+            "description": "User can read environments."
+          },
+          {
+            "name": "ReadRemoteConnections",
+            "value": "ReadRemoteConnections",
+            "description": "User can read remote connections on their own dev boxes."
+          },
+          {
+            "name": "StartDevBoxes",
+            "value": "StartDevBoxes",
+            "description": "User can start their own dev boxes."
+          },
+          {
+            "name": "StopDevBoxes",
+            "value": "StopDevBoxes",
+            "description": "User can stop their own dev boxes."
+          },
+          {
+            "name": "WriteDevBoxes",
+            "value": "WriteDevBoxes",
+            "description": "User can create dev boxes."
+          },
+          {
+            "name": "WriteEnvironments",
+            "value": "WriteEnvironments",
+            "description": "User can create new environments or replace and update existing ones."
+          }
+        ]
+      }
     },
     "RemoteConnection": {
       "type": "object",
